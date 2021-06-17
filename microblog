@@ -1,0 +1,48 @@
+#!/bin/bash
+
+# Shamelessly copied and adapted
+# from https://stackoverflow.com/questions/2361181/how-to-open-an-editor-from-a-bash-function
+# by N1Nxx (N1N@skillsources.org)
+
+openEditor()
+{
+    # If some text was provided as param
+    # with the command, return that text
+    if [ "$1" ]
+    then
+        echo "$1"
+        return 0
+    fi
+
+    # Otherwise, create a temp file and
+    # open it with the user's editor of
+    # choice OR vi
+    tmpf=$(mktemp -t microblog)
+    ${EDITOR:-vi} "$tmpf" 3>&1 1>&2 2>&3
+    
+    # Grab the content and delete the temp file
+    cat "$tmpf"
+    rm "$tmpf"
+}
+
+# Check that the token is specified
+if [ -z "$TOKEN" ]; then
+    echo -e "Missing app token.\nUsage: TOKEN=<app token> microblog ['text\"]"
+else
+    # Grab the content as param
+    # or create a temp file and open
+    # the $EDITOR
+    content=$(openEditor "$1")
+
+    # cURL the content to the micro.blog post endpoint
+    res=$(curl --write-out '%{http_code}' --silent --output /dev/null \
+        --location --request POST "https://micro.blog/micropub" \
+        --header "Authorization: Token $TOKEN" \
+        --header "Content-Type: application/x-www-form-urlencoded" \
+        --data-urlencode "content=$content")
+    if [[ "$res" == "202" ]]; then
+        echo -n "Post created. Status code $res"
+    else
+        echo -n "An error occured while posting. Status code $res"
+    fi
+fi
