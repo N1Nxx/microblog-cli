@@ -25,9 +25,14 @@ openEditor()
     rm "$tmpf"
 }
 
+# Check if a config file exists, and source it
+if test -f ${HOME}/.config/microblog.conf ; then
+    . ${HOME}/.config/microblog.conf
+fi
+
 # Check that the token is specified
 if [ -z "$TOKEN" ]; then
-    echo -e "Missing app token.\nUsage: TOKEN=<app token> microblog ['text\"]"
+    echo -e "Missing app token.\nYou can store the token in $HOME/.config/microblog.conf or prepend the command\nUsage: TOKEN=<app token> microblog ['text\"]"
 else
     # Grab the content as param
     # or create a temp file and open

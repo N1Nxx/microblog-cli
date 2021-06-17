@@ -13,5 +13,9 @@ the repo directory to your `$PATH`
 
 4. Create an app token on [this page](https://micro.blog/account/apps)
 
+5. You can store the app token in `$HOME/.config/microblog.conf`
+`echo "TOKEN=<app token value" > $HOME/.config/microblog.conf`
+Otherwise, prepend the command with `TOKEN=<app token value> microblog ["some text"]`
+
 ### Commands
-`TOKEN=<app token value> microblog ["some text"]`
+`microblog ["some text"]`
