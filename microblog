@@ -26,8 +26,8 @@ openEditor()
 }
 
 # Check if a config file exists, and source it
-if test -f ${HOME}/.config/microblog.conf ; then
-    . ${HOME}/.config/microblog.conf
+if test -f "${HOME}/.config/microblog.conf" ; then
+    . "${HOME}/.config/microblog.conf"
 fi
 
 # Check that the token is specified
